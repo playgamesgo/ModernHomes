@@ -1,0 +1,77 @@
+# File version (do NOT edit):
+config-version: 1
+
+use-mysql: false
+mysql:
+  host: localhost
+  port: 3306
+  database: database
+  username: username
+  password: password
+
+messages:
+  plugin-prefix: "&8[&6&lModernHomes&8]"
+  only-players: "&cOnly players can use this command!"
+  no-args-set-home: "&cYou must specify a name for your home!"
+  no-args-del-home: "&cYou must specify a name for the home you want to delete!"
+  no-args-home: "&cYou must specify a name for the home you want to teleport to!"
+  no-args-edit-home: "&cYou must specify a name for the home you want to edit!"
+  set-home: "&aYou have set your home &6%home%&a!"
+  too-much-homes: "&cYou have reached the maximum amount of homes!"
+  no-permission: "&cYou do not have permission to use this command!"
+  home-name-taken: "&cThis home name is already taken!"
+  home-not-found: "&cThis home does not exist!"
+  blacklisted-world: "&cYou cannot set a home in this world!"
+  teleport-cancelled: "&cYour teleportation has been cancelled!"
+  teleport-in-seconds: "&aYou will be teleported in &6%seconds% &aseconds!"
+  teleport-in-second: "&aYou will be teleported in &61 &asecond!"
+  home-deleted: "&aYou have deleted your home &6%home%&a!"
+  home-list: "&aYour homes: &6%homes%&a."
+  home-list-empty: "&aYou do not have any homes!"
+  home-list-other: "&a%player%'s homes: &6%homes%&a."
+  home-list-empty-other: "&a%player% does not have any homes!"
+  no-such-player: "&cThis player does not exist!"
+  no-args-option: "&cYou must specify a option!"
+  no-such-option: "&cThis option does not exist!"
+  home-name-changed: "&aYou have changed your home name from &6%old% &ato &6%new%&a!"
+  home-public-changed-to-true: "&aYou have made your home &6%home% &apublic!"
+  home-public-changed-to-false: "&aYou have made your home &6%home% &aprivate!"
+  no-args-player: "&cYou must specify a player!"
+  no-args-tp-home: "&cYou must specify a home!"
+  home-not-public: "&cThis home is not public!"
+  home-invite-message: "&a%player% has invited you to their home &6%home%&a!"
+  home-invite-sent: "&aYou have invited &6%player% &ato your home &6%home%&a!"
+  home-invite-expired: "&cHome invite has been expired!"
+  home-invite-enabled: "&aYou have enabled home invites!"
+  home-invite-disabled: "&aYou have disabled home invites!"
+  home-invite-global-disabled: "&cHome invites are globally disabled!"
+  player-ignore-home-invite: "&aPlayer is ignoring home invites!"
+  no-home-invite: "&cYou do not have any home invites!"
+  home-invite-denied: "&cYou have denied the home invite!"
+  no-args-name: "&cYou must specify a name!"
+  no-args-admin-home: "&cYou must specify a home!"
+  config-reloaded: "&aConfig reloaded!"
+  help-header: "&8- &aHelp"
+  help:
+    - "&8- &a/sethome <name> &8- &7Sets a home."
+    - "&8- &a/home <name> &8- &7Teleports you to a home."
+    - "&8- &a/homes &8- &7Lists your homes."
+    - "&8- &a/homes <player> &8- &7Lists a player's homes."
+    - "&8- &a/delhome <name> &8- &7Deletes a home."
+    - "&8- &a/edithome <name> <edit/public> <value> &8- &7Edits a home."
+    - "&8- &a/hometp <player> <name> &8- &7Teleports you to a public player's home."
+    - "&8- &a/homeinvite <player> <name> &8- &7Invites a player to your home."
+    - "&8- &a/homeaccept &8- &7Accepts a home invite."
+    - "&8- &a/homedeny &8- &7Denies a home invite."
+    - "&8- &a/homeignore &8- &7Ignores home invites."
+    - "&8- &a/homeadmin <name> <tp/edit/public> <value> &8- &7Admin commands."
+    - "&8- &a/modernhomes reload &8- &7Reloads the config."
+
+blacklisted-worlds:
+  - world_nether
+  - world_the_end
+
+teleport-delay: 5
+cancel-teleport-on-move: true
+home-invite-enabled: true
+home-invite-expire-time: 60

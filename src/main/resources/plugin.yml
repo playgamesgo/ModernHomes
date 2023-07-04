@@ -1,0 +1,71 @@
+name: ModernHomes
+version: '${version}'
+main: com.playgamesgo.modernhomes.ModernHomes
+api-version: '1.19'
+author: playgamesgo
+description: A modern homes plugin for Minecraft.
+commands:
+  sethome:
+    description: Sets a home.
+    usage: /sethome <name>
+    permission: modernhomes.sethome
+  home:
+    description: Teleports you to a home.
+    usage: /home <name>
+    permission: modernhomes.home
+  delhome:
+    description: Deletes a home.
+    usage: /delhome <name>
+    permission: modernhomes.delhome
+  homes:
+    description: Lists your homes.
+    usage: /homes
+    permission: modernhomes.home
+  homeedit:
+    description: Edits a home.
+    usage: /homeedit <name> <option> <value>
+    permission: modernhomes.home
+  hometp:
+    description: Teleports you to a home.
+    usage: /hometp <player> <name>
+    permission: modernhomes.home.other.tp
+  homeinvite:
+    description: Invites a player to your home.
+    usage: /homeinvite <player> <name>
+    permission: modernhomes.home.invite
+  homeignore:
+    description: Ignores home invites.
+    usage: /homeignore
+    permission: modernhomes.home.ignore
+  homeaccept:
+    description: Accepts a home invite.
+    usage: /homeaccept
+    permission: modernhomes.home
+  homedeny:
+    description: Denies a home invite.
+    usage: /homedeny
+    permission: modernhomes.home
+  homeadmin:
+    description: Admin commands.
+    usage: /homeadmin <player> <option> <value>
+    permission: modernhomes.admin
+  modernhomes:
+    description: Main command.
+    usage: /modernhomes
+permissions:
+  modernhomes.sethome:
+    default: true
+  modernhomes.home:
+    default: true
+  modernhomes.delhome:
+    default: true
+  modernhomes.home.invite:
+    default: true
+  modernhomes.home.ignore:
+    default: true
+  modernhomes.admin:
+    default: op
+  modernhomes.home.other.see:
+    default: op
+  modernhomes.home.other.tp:
+    default: op
