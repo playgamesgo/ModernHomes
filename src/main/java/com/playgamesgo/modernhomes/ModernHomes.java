@@ -31,18 +31,27 @@ public final class ModernHomes extends JavaPlugin {
 
         new DatabaseManager(this);
 
-        getCommand("sethome").setExecutor(new setHomeCommand());
-        getCommand("home").setExecutor(new homeCommand(this));
-        getCommand("delhome").setExecutor(new delHomeCommand());
-        getCommand("homes").setExecutor(new homesCommand());
-        getCommand("homeedit").setExecutor(new homeEditCommand());
-        getCommand("hometp").setExecutor(new homeTpCommand(this));
-        getCommand("homeinvite").setExecutor(new homeInviteCommand());
-        getCommand("homeignore").setExecutor(new homeIgnoreCommand());
-        getCommand("homeaccept").setExecutor(new homeAcceptCommand(this));
-        getCommand("homedeny").setExecutor(new homeDenyCommand());
-        getCommand("homeadmin").setExecutor(new homeAdminCommand());
+        homeAcceptCommand homeAcceptCommand = new homeAcceptCommand(this);
+        homeCommand homeCommand = new homeCommand(this);
+        homeInviteCommand homeInviteCommand = new homeInviteCommand();
+        homeTpCommand homeTpCommand = new homeTpCommand(this);
+
         getCommand("modernhomes").setExecutor(new modernHomesCommand());
+        if (!config.getBoolean("one-command-mode")) {
+            getCommand("sethome").setExecutor(new setHomeCommand());
+            getCommand("home").setExecutor(homeCommand);
+            getCommand("delhome").setExecutor(new delHomeCommand());
+            getCommand("homes").setExecutor(new homesCommand());
+            getCommand("homeedit").setExecutor(new homeEditCommand());
+            getCommand("hometp").setExecutor(homeTpCommand);
+            getCommand("homeinvite").setExecutor(homeInviteCommand);
+            getCommand("homeignore").setExecutor(new homeIgnoreCommand());
+            getCommand("homeaccept").setExecutor(homeAcceptCommand);
+            getCommand("homedeny").setExecutor(new homeDenyCommand());
+            getCommand("homeadmin").setExecutor(new homeAdminCommand());
+        } else {
+            getCommand("home").setExecutor(new oneHomeCommand(this, homeAcceptCommand, homeCommand, homeInviteCommand, homeTpCommand));
+        }
     }
 
     @Override

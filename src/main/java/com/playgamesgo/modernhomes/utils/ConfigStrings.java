@@ -88,4 +88,20 @@ public class ConfigStrings {
             ModernHomes.config.getString("messages.config-reloaded"));
     public static final String helpHeader = pluginPrefix + ChatColor.translateAlternateColorCodes('&',
             ModernHomes.config.getString("messages.help-header"));
+    public static final String homeAlreadyExists = pluginPrefix + ChatColor.translateAlternateColorCodes('&',
+            ModernHomes.config.getString("messages.home-already-exists"));
+    public static final String oneModeHomeSet = pluginPrefix + ChatColor.translateAlternateColorCodes('&',
+            ModernHomes.config.getString("messages.one-mode-home-set"));
+    public static final String oneModeHomeNotFound = pluginPrefix + ChatColor.translateAlternateColorCodes('&',
+            ModernHomes.config.getString("messages.one-mode-home-not-found"));
+    public static final String oneModeHomeDeleted = pluginPrefix + ChatColor.translateAlternateColorCodes('&',
+            ModernHomes.config.getString("messages.one-mode-home-deleted"));
+    public static final String oneModeHomeInviteMessage = pluginPrefix + ChatColor.translateAlternateColorCodes('&',
+            ModernHomes.config.getString("messages.one-mode-home-invite-message"));
+    public static final String oneModeHomeInviteSent = pluginPrefix + ChatColor.translateAlternateColorCodes('&',
+            ModernHomes.config.getString("messages.one-mode-home-invite-sent"));
+    public static final String oneModeHomePublicChangedToTrue = pluginPrefix + ChatColor.translateAlternateColorCodes('&',
+            ModernHomes.config.getString("messages.one-mode-home-public-changed-to-true"));
+    public static final String oneModeHomePublicChangedToFalse = pluginPrefix + ChatColor.translateAlternateColorCodes('&',
+            ModernHomes.config.getString("messages.one-mode-home-public-changed-to-false"));
 }

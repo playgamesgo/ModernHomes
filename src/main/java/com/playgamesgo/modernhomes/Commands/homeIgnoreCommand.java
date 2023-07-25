@@ -17,17 +17,21 @@ public class homeIgnoreCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (sender instanceof Player player) {
             if (ModernHomes.config.getBoolean("home-invite-enabled")) {
-                if (ignoreMap.containsKey(player)) {
-                    ignoreMap.remove(player);
-                    player.sendMessage(ConfigStrings.homeInviteEnabled);
-                } else {
-                    ignoreMap.put(player, true);
-                    player.sendMessage(ConfigStrings.homeInviteDisabled);
-                }
+                execute(player);
             } else {
                 player.sendMessage(ConfigStrings.homeInviteGlobalDisabled);
             }
         }
         return true;
+    }
+
+    public static void execute(Player player) {
+        if (ignoreMap.containsKey(player)) {
+            ignoreMap.remove(player);
+            player.sendMessage(ConfigStrings.homeInviteEnabled);
+        } else {
+            ignoreMap.put(player, true);
+            player.sendMessage(ConfigStrings.homeInviteDisabled);
+        }
     }
 }

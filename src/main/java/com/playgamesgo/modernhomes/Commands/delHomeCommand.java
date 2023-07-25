@@ -19,17 +19,7 @@ public class delHomeCommand implements CommandExecutor {
         if (sender instanceof Player player) {
             if (args.length == 1) {
                 if (player.hasPermission("modernhomes.delhome")) {
-                    try {
-                        ResultSet rs = DatabaseManager.connection.createStatement().executeQuery("SELECT * FROM homes WHERE uuid = '" + player.getUniqueId() + "' AND name = '" + args[0] + "'");
-                        if (rs.next()) {
-                            DatabaseManager.connection.createStatement().executeUpdate("DELETE FROM homes WHERE uuid = '" + player.getUniqueId() + "' AND name = '" + args[0] + "'");
-                            player.sendMessage(ConfigStrings.homeDeleted.replace("%home%", args[0]));
-                        } else {
-                            player.sendMessage(ConfigStrings.homeNotFound);
-                        }
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);
-                    }
+                    execute(player, args, false);
                 } else {
                     player.sendMessage(ConfigStrings.noPermission);
                 }
@@ -40,5 +30,27 @@ public class delHomeCommand implements CommandExecutor {
             sender.sendMessage(ConfigStrings.onlyPlayers);
         }
         return true;
+    }
+
+    public static void execute(Player player, String[] args, boolean oneMode) {
+        try {
+            ResultSet rs = DatabaseManager.connection.createStatement().executeQuery("SELECT * FROM homes WHERE uuid = '" + player.getUniqueId() + "' AND name = '" + args[0] + "'");
+            if (rs.next()) {
+                DatabaseManager.connection.createStatement().executeUpdate("DELETE FROM homes WHERE uuid = '" + player.getUniqueId() + "' AND name = '" + args[0] + "'");
+                if (!oneMode) {
+                    player.sendMessage(ConfigStrings.homeDeleted.replace("%home%", args[0]));
+                } else {
+                    player.sendMessage(ConfigStrings.oneModeHomeDeleted);
+                }
+            } else {
+                if (!oneMode) {
+                    player.sendMessage(ConfigStrings.homeNotFound);
+                } else {
+                    player.sendMessage(ConfigStrings.oneModeHomeNotFound);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

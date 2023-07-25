@@ -18,34 +18,7 @@ public class homeEditCommand implements CommandExecutor {
         if (sender instanceof Player player) {
             if (args.length > 0) {
                 if (args.length > 1) {
-                    try {
-                        ResultSet rs = DatabaseManager.connection.createStatement().executeQuery("SELECT * FROM homes WHERE name = '" + args[0] + "' AND uuid = '" + player.getUniqueId() + "'");
-                        if (rs.next()) {
-                            if (Objects.equals(args[1], "name")) {
-                                if (args.length > 2) {
-                                    DatabaseManager.connection.createStatement().executeUpdate("UPDATE homes SET name = '" + args[2] + "' WHERE name = '" + args[0] + "' AND uuid = '" + player.getUniqueId() + "'");
-                                    player.sendMessage(ConfigStrings.homeNameChanged.replace("%new%", args[2]).replace("%old%", args[0]));
-                                } else {
-                                    player.sendMessage(ConfigStrings.noArgsName);
-                                }
-                            } else if (Objects.equals(args[1], "public")) {
-                                if (args[2].equals("true") || args[2].equals("false")) {
-                                    DatabaseManager.connection.createStatement().executeUpdate("UPDATE homes SET public = '" + args[2] + "' WHERE name = '" + args[0] + "' AND uuid = '" + player.getUniqueId() + "'");
-                                    if (args[2].equals("true")) {
-                                        player.sendMessage(ConfigStrings.homePublicChangedToTrue.replace("%home%", args[0]));
-                                    } else {
-                                        player.sendMessage(ConfigStrings.homePublicChangedToFalse.replace("%home%", args[0]));
-                                    }
-                                }
-                            } else {
-                                player.sendMessage(ConfigStrings.noSuchOption);
-                            }
-                        } else {
-                            player.sendMessage(ConfigStrings.homeNotFound);
-                        }
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);
-                    }
+                    execute(player, args, false);
                 } else {
                     player.sendMessage(ConfigStrings.noArgsOption);
                 }
@@ -57,5 +30,46 @@ public class homeEditCommand implements CommandExecutor {
         }
 
         return true;
+    }
+
+    public static void execute(Player player, String[] args, boolean oneMode) {
+        try {
+            ResultSet rs = DatabaseManager.connection.createStatement().executeQuery("SELECT * FROM homes WHERE name = '" + args[0] + "' AND uuid = '" + player.getUniqueId() + "'");
+            if (rs.next()) {
+                if (Objects.equals(args[1], "name")) {
+                    if (args.length > 2) {
+                        DatabaseManager.connection.createStatement().executeUpdate("UPDATE homes SET name = '" + args[2] + "' WHERE name = '" + args[0] + "' AND uuid = '" + player.getUniqueId() + "'");
+                        player.sendMessage(ConfigStrings.homeNameChanged.replace("%new%", args[2]).replace("%old%", args[0]));
+                    } else {
+                        player.sendMessage(ConfigStrings.noArgsName);
+                    }
+                } else if (Objects.equals(args[1], "public")) {
+                    if (args[2].equals("true") || args[2].equals("false")) {
+                        DatabaseManager.connection.createStatement().executeUpdate("UPDATE homes SET public = '" + args[2] + "' WHERE name = '" + args[0] + "' AND uuid = '" + player.getUniqueId() + "'");
+                        if (args[2].equals("true")) {
+                            if (!oneMode) {
+                                player.sendMessage(ConfigStrings.homePublicChangedToTrue.replace("%home%", args[0]));
+                            } else {
+                                player.sendMessage(ConfigStrings.oneModeHomePublicChangedToTrue);
+                            }
+                        } else {
+                            if (!oneMode) {
+                                player.sendMessage(ConfigStrings.homePublicChangedToFalse.replace("%home%", args[0]));
+                            } else {
+                                player.sendMessage(ConfigStrings.oneModeHomePublicChangedToFalse);
+                            }
+                        }
+                    } else {
+                        player.sendMessage(ConfigStrings.noSuchOption);
+                    }
+                } else {
+                    player.sendMessage(ConfigStrings.noSuchOption);
+                }
+            } else {
+                player.sendMessage(ConfigStrings.homeNotFound);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

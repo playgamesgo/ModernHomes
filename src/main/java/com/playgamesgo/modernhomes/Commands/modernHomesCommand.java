@@ -30,6 +30,9 @@ public class modernHomesCommand implements CommandExecutor {
         } else {
             sender.sendMessage(ConfigStrings.helpHeader);
             List<String> help = ModernHomes.config.getStringList("messages.help");
+            if (ModernHomes.config.getBoolean("one-command-mode")) {
+                help = ModernHomes.config.getStringList("one-mode-help");
+            }
             for (String line : help) {
                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&', line));
             }

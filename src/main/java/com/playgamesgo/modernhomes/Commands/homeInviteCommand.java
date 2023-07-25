@@ -24,46 +24,7 @@ public class homeInviteCommand implements CommandExecutor {
             if (args.length > 0) {
                 if (args.length > 1) {
                     if (ModernHomes.config.getBoolean("home-invite-enabled")) {
-                        try {
-                            ResultSet rs = DatabaseManager.connection.createStatement().executeQuery("SELECT * FROM homes WHERE uuid = '" + player.getUniqueId() + "' AND name = '" + args[1] + "'");
-                            if (rs.next()) {
-                                Player target = player.getServer().getPlayer(args[0]);
-                                if (target == null) {
-                                    player.sendMessage(ConfigStrings.noSuchPlayer);
-                                } else {
-                                    homeInvite.remove(target);
-                                    if (homeIgnoreCommand.ignoreMap.containsKey(target)) {
-                                        player.sendMessage(ConfigStrings.PlayerIgnoreHomeInvite);
-                                        return true;
-                                    }
-                                    homeInvite.put(target, rs.getInt("id"));
-                                    target.sendMessage(ConfigStrings.homeInviteMessage.replace("%player%", player.getName()).replace("%home%", args[1]));
-                                    player.sendMessage(ConfigStrings.homeInviteSent.replace("%player%", target.getName()).replace("%home%", args[1]));
-
-                                    this.delay = ModernHomes.config.getInt("home-invite-expire-time") * 20;
-                                    this.scheduler = Bukkit.getScheduler().scheduleSyncRepeatingTask(Bukkit.getPluginManager().getPlugin("ModernHomes"), new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            if (homeInvite.containsKey(target)) {
-                                                if (homeInviteCommand.this.delay == 0) {
-                                                    homeInvite.remove(target);
-                                                    target.sendMessage(ConfigStrings.homeInviteExpired);
-                                                    player.sendMessage(ConfigStrings.homeInviteExpired);
-                                                    Bukkit.getScheduler().cancelTask(homeInviteCommand.this.scheduler);
-                                                }
-                                            } else {
-                                                Bukkit.getScheduler().cancelTask(homeInviteCommand.this.scheduler);
-                                            }
-                                            homeInviteCommand.this.delay--;
-                                        }
-                                    }, 0, 1);
-                                }
-                            } else {
-                                player.sendMessage(ConfigStrings.homeNotFound);
-                            }
-                        } catch (SQLException e) {
-                            throw new RuntimeException(e);
-                        }
+                        execute(player, args, false);
                     } else {
                         player.sendMessage(ConfigStrings.homeInviteGlobalDisabled);
                     }
@@ -77,5 +38,53 @@ public class homeInviteCommand implements CommandExecutor {
             sender.sendMessage(ConfigStrings.onlyPlayers);
         }
         return true;
+    }
+
+    public void execute(Player player, String[] args, boolean oneMode) {
+        try {
+            ResultSet rs = DatabaseManager.connection.createStatement().executeQuery("SELECT * FROM homes WHERE uuid = '" + player.getUniqueId() + "' AND name = '" + args[1] + "'");
+            if (rs.next()) {
+                Player target = player.getServer().getPlayer(args[0]);
+                if (target == null) {
+                    player.sendMessage(ConfigStrings.noSuchPlayer);
+                } else {
+                    homeInvite.remove(target);
+                    if (homeIgnoreCommand.ignoreMap.containsKey(target)) {
+                        player.sendMessage(ConfigStrings.PlayerIgnoreHomeInvite);
+                        return;
+                    }
+                    homeInvite.put(target, rs.getInt("id"));
+                    if (!oneMode) {
+                        target.sendMessage(ConfigStrings.homeInviteMessage.replace("%player%", player.getName()).replace("%home%", args[1]));
+                        player.sendMessage(ConfigStrings.homeInviteSent.replace("%player%", target.getName()).replace("%home%", args[1]));
+                    } else {
+                        target.sendMessage(ConfigStrings.oneModeHomeInviteMessage.replace("%player%", player.getName()));
+                        player.sendMessage(ConfigStrings.oneModeHomeInviteSent.replace("%player%", target.getName()));
+                    }
+
+                    this.delay = ModernHomes.config.getInt("home-invite-expire-time") * 20;
+                    this.scheduler = Bukkit.getScheduler().scheduleSyncRepeatingTask(Bukkit.getPluginManager().getPlugin("ModernHomes"), new Runnable() {
+                        @Override
+                        public void run() {
+                            if (homeInvite.containsKey(target)) {
+                                if (homeInviteCommand.this.delay == 0) {
+                                    homeInvite.remove(target);
+                                    target.sendMessage(ConfigStrings.homeInviteExpired);
+                                    player.sendMessage(ConfigStrings.homeInviteExpired);
+                                    Bukkit.getScheduler().cancelTask(homeInviteCommand.this.scheduler);
+                                }
+                            } else {
+                                Bukkit.getScheduler().cancelTask(homeInviteCommand.this.scheduler);
+                            }
+                            homeInviteCommand.this.delay--;
+                        }
+                    }, 0, 1);
+                }
+            } else {
+                player.sendMessage(ConfigStrings.homeNotFound);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

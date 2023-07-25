@@ -51,6 +51,14 @@ messages:
   no-args-name: "&cYou must specify a name!"
   no-args-admin-home: "&cYou must specify a home!"
   config-reloaded: "&aConfig reloaded!"
+  home-already-exists: "&cYour home already exists!"
+  one-mode-home-set: "&aYou have set your home!"
+  one-mode-home-not-found: "&cYou do not have a home!"
+  one-mode-home-deleted: "&aYou have deleted your home!"
+  one-mode-home-invite-message: "&a%player% has invited you to their home"
+  one-mode-home-invite-sent: "&aYou have invited &6%player% &ato your home"
+  one-mode-home-public-changed-to-true: "&aYou have made your home public!"
+  one-mode-home-public-changed-to-false: "&aYou have made your home private!"
   help-header: "&8- &aHelp"
   help:
     - "&8- &a/sethome <name> &8- &7Sets a home."
@@ -58,13 +66,13 @@ messages:
     - "&8- &a/homes &8- &7Lists your homes."
     - "&8- &a/homes <player> &8- &7Lists a player's homes."
     - "&8- &a/delhome <name> &8- &7Deletes a home."
-    - "&8- &a/edithome <name> <edit/public> <value> &8- &7Edits a home."
+    - "&8- &a/homeedit <name> <edit/public> <value> &8- &7Edits a home."
     - "&8- &a/hometp <player> <name> &8- &7Teleports you to a public player's home."
     - "&8- &a/homeinvite <player> <name> &8- &7Invites a player to your home."
     - "&8- &a/homeaccept &8- &7Accepts a home invite."
     - "&8- &a/homedeny &8- &7Denies a home invite."
     - "&8- &a/homeignore &8- &7Ignores home invites."
-    - "&8- &a/homeadmin <name> <tp/edit/public> <value> &8- &7Admin commands."
+    - "&8- &a/homeadmin <player> <name> <delete/tp/edit/public> <value> &8- &7Admin commands."
     - "&8- &a/modernhomes reload &8- &7Reloads the config."
 
 blacklisted-worlds:
@@ -75,3 +83,26 @@ teleport-delay: 5
 cancel-teleport-on-move: true
 home-invite-enabled: true
 home-invite-expire-time: 60
+
+#|---------------------------------------------------------------------|
+#|                                                                     |
+#|                        One Command Mode                             |
+#| If you want to use to players have only one home, set this to true. |
+#|   Also this changing all commands and player can lose their homes   |
+#|                                                                     |
+#|---------------------------------------------------------------------|
+one-command-mode: false
+one-mode-help:
+  - "&8- &a/home &8- &7tp to home."
+  - "&8- &a/home set &8- &7set home."
+  - "&8- &a/home remove &8- &7delete home."
+  - "&8- &a/home invite &8- &7invite player to your home."
+  - "&8- &a/home accept &8- &7accept home invite."
+  - "&8- &a/home deny &8- &7deny home invite."
+  - "&8- &a/home ignore &8- &7ignore home invites."
+  - "&8- &a/home tp <player> &8- &7tp to player's home."
+  - "&8- &a/home public <true/false> &8- &7set home public."
+  - "&8- &a/home admin <delete/public/tp> &8- &7admin commands."
+
+
+

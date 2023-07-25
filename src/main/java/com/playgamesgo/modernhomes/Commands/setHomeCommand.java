@@ -19,54 +19,7 @@ public class setHomeCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 1) {
-                int currentHomes;
-                try {
-                    currentHomes = DatabaseManager.connection.createStatement().executeQuery("SELECT COUNT(*) FROM homes WHERE uuid='" + player.getUniqueId() + "'").getInt(1);
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-
-                int maxHomes = 0;
-                for (PermissionAttachmentInfo permissionAttachmentInfo : player.getEffectivePermissions()) {
-                    if (!permissionAttachmentInfo.getPermission().startsWith("modernhomes.sethome.max.")) continue;
-                    if (permissionAttachmentInfo.getPermission().equals("modernhomes.sethome.max.unlimited")) break;
-                    maxHomes = Integer.parseInt(permissionAttachmentInfo.getPermission().toLowerCase().replaceAll("modernhomes.sethome.max.", ""));
-                }
-
-                if (currentHomes >= maxHomes && !player.hasPermission("modernhomes.sethome.max.unlimited")) {
-                    player.sendMessage(ConfigStrings.tooMuchHomes);
-                    return true;
-                }
-
-                if (!player.hasPermission("modernhomes.sethome")) {
-                    player.sendMessage(ConfigStrings.noPermission);
-                    return true;
-                }
-
-                for (String s : ModernHomes.config.getStringList("blacklisted-worlds")) {
-                    if (player.getWorld().getName().equals(s)) {
-                        player.sendMessage(ConfigStrings.blacklistedWorld);
-                        return true;
-                    }
-                }
-
-                try {
-                    if (DatabaseManager.connection.createStatement().executeQuery("SELECT COUNT(*) FROM homes WHERE uuid='" + player.getUniqueId() + "' AND name='" + args[0] + "'").getInt(1) > 0) {
-                        player.sendMessage(ConfigStrings.homeNameTaken);
-                        return true;
-                    }
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-
-
-                try {
-                    DatabaseManager.connection.createStatement().executeUpdate("INSERT INTO homes (uuid, name, world, x, y, z, yaw, pitch, public) VALUES ('" + player.getUniqueId() + "', '" + args[0] + "', '" + player.getWorld().getName() + "', '" + player.getLocation().getX() + "', '" + player.getLocation().getY() + "', '" + player.getLocation().getZ() + "', '" + player.getLocation().getYaw() + "', '" + player.getLocation().getPitch() + " ', 'false')");
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-                player.sendMessage(ConfigStrings.setHome.replace("%home%", args[0]));
-
+                execute(player, args, false);
             } else {
                 player.sendMessage(ConfigStrings.noArgsSetHome);
             }
@@ -75,5 +28,65 @@ public class setHomeCommand implements CommandExecutor {
         }
 
         return true;
+    }
+
+    public static void execute(Player player, String[] args, boolean oneMode) {
+        int currentHomes;
+        try {
+            currentHomes = DatabaseManager.connection.createStatement().executeQuery("SELECT COUNT(*) FROM homes WHERE uuid='" + player.getUniqueId() + "'").getInt(1);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        int maxHomes = 0;
+        for (PermissionAttachmentInfo permissionAttachmentInfo : player.getEffectivePermissions()) {
+            if (!permissionAttachmentInfo.getPermission().startsWith("modernhomes.sethome.max.")) continue;
+            if (permissionAttachmentInfo.getPermission().equals("modernhomes.sethome.max.unlimited")) break;
+            maxHomes = Integer.parseInt(permissionAttachmentInfo.getPermission().toLowerCase().replaceAll("modernhomes.sethome.max.", ""));
+        }
+
+        if (currentHomes >= maxHomes &&
+                !player.hasPermission("modernhomes.sethome.max.unlimited") &&
+                !oneMode) {
+            player.sendMessage(ConfigStrings.tooMuchHomes);
+            return;
+        }
+
+        if (!player.hasPermission("modernhomes.sethome")) {
+            player.sendMessage(ConfigStrings.noPermission);
+            return;
+        }
+
+        for (String s : ModernHomes.config.getStringList("blacklisted-worlds")) {
+            if (player.getWorld().getName().equals(s)) {
+                player.sendMessage(ConfigStrings.blacklistedWorld);
+                return;
+            }
+        }
+
+        try {
+            if (DatabaseManager.connection.createStatement().executeQuery("SELECT COUNT(*) FROM homes WHERE uuid='" + player.getUniqueId() + "' AND name='" + args[0] + "'").getInt(1) > 0) {
+                if (!oneMode) {
+                    player.sendMessage(ConfigStrings.homeNameTaken);
+                } else {
+                    player.sendMessage(ConfigStrings.homeAlreadyExists);
+                }
+                return;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        try {
+            DatabaseManager.connection.createStatement().executeUpdate("INSERT INTO homes (uuid, name, world, x, y, z, yaw, pitch, public) VALUES ('" + player.getUniqueId() + "', '" + args[0] + "', '" + player.getWorld().getName() + "', '" + player.getLocation().getX() + "', '" + player.getLocation().getY() + "', '" + player.getLocation().getZ() + "', '" + player.getLocation().getYaw() + "', '" + player.getLocation().getPitch() + " ', 'false')");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        if (!oneMode) {
+            player.sendMessage(ConfigStrings.setHome.replace("%home%", args[0]));
+        } else {
+            player.sendMessage(ConfigStrings.oneModeHomeSet);
+        }
     }
 }
